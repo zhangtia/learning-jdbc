@@ -17,5 +17,5 @@ JDBCListMap.java
   - "kills" column is auto-incrementing and used as index 
 - Example() function returns a List<Map<String,Object>> object to test insert function
 - Recycled the commit() function from DBEditor.java so executing SQL requires manual confirmation each time..
-  -will change to executeBatch() without manual confirmation for faster execution of large SQL commands 
+  - will change to executeBatch() without manual confirmation for faster execution of large SQL commands 
 
