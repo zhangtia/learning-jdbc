@@ -4,5 +4,6 @@ Wrote this code when learning about Java Database Connectivity during summer int
 Code written and compiled on Intellij IDEA using Java
 
 
-DBEditor.java - connect to database and requires manual input to insert, delete and update
+DBEditor.java
+- connect to database and requires manual input to insert, delete and update
 
