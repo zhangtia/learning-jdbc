@@ -82,7 +82,7 @@ public class JDBCListMap {
         List<Map<String, Object>> list = new ArrayList<>();
         Map<String, Object> nmap = new HashMap<String, Object>();
         nmap.put("chair", '3');
-        nmap.put("fire", 472.6);
+        nmap.put("fire", 472);
         nmap.put("idk", "I need EDM when coding");
         list.add(nmap);
         Map<String, Object> amap = new HashMap<String, Object>();
