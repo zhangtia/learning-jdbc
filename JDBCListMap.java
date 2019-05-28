@@ -87,14 +87,14 @@ public class JDBCListMap {
         list.add(nmap);
         Map<String, Object> amap = new HashMap<String, Object>();
         amap.put("chair", "yhkggi");
-        amap.put("kills", 55);
+        //amap.put("kills", 55);
         amap.put("idk", 333333);
         list.add(amap);
         Map<String, Object> znmap = new HashMap<String, Object>();
         znmap.put("chair", 17246);
         znmap.put("fire", 999999999);
         znmap.put("idk", 611534);
-        znmap.put("kills", 5);
+        //znmap.put("kills", 5);
         list.add(znmap);
         Map<String, Object> emmap = new HashMap<String, Object>();
         list.add(emmap);
@@ -142,10 +142,41 @@ public class JDBCListMap {
         }
     }
 
+    private void delete(List<Map<String,Object>> list) {
+        for (Map<String,Object> mp : list) {
+            String values = "";
+            if (mp.containsKey("kills")) {
+                String k = mp.get("kills").toString();
+                if (values.equals("")) values = "kills = " + k;
+                else values = values + " AND kills = " + k;
+            }
+            if (mp.containsKey("chair")) {
+                String c = mp.get("chair").toString();
+                if (values.equals("")) values = "chair = '" + c + "'";
+                else values = values + " AND chair = '" + c + "'";
+            }
+            if (mp.containsKey("fire")) {
+                String f = mp.get("fire").toString();
+                if (values.equals("")) values = "fire = " + f;
+                else values = values + " AND fire = " + f;
+            }
+            if (mp.containsKey("idk")) {
+                String i = mp.get("idk").toString();
+                if (values.equals("")) values = "idk = '" + i + "'";
+                else values = values + " AND idk = '" + i + "'";
+            }
+            if (!values.equals("")) {
+                String command = "DELETE FROM new WHERE " + values;
+                commit(command);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         JDBCListMap tq = new JDBCListMap();
         tq.getconnection();
         while (!tq.testcnct()) tq.getconnection();
         tq.insert(tq.example());
+        tq.delete(tq.example());
     }
 }
