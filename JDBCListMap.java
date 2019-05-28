@@ -8,7 +8,7 @@ public class JDBCListMap {
     static String user = "";
     static String password = "";
 
-    public void getconnection() {
+    private void getconnection() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Input Driver: ");
         driver = "com.mysql.jdbc." + sc.nextLine();
@@ -22,7 +22,7 @@ public class JDBCListMap {
         password = sc.nextLine();
     }
 
-    public boolean testcnct() {
+    private boolean testcnct() {
         Connection conn = null;
         try {
             Class.forName(driver);
@@ -49,7 +49,7 @@ public class JDBCListMap {
         return true;
     }
 
-    public void commit(String command) {
+    private void commit(String command) {
         String confirm = "";
         Scanner sc = new Scanner(System.in);
         while (!confirm.equalsIgnoreCase("Y") && !confirm.equalsIgnoreCase("N")) {
@@ -78,25 +78,30 @@ public class JDBCListMap {
         }
     }
 
-    public List<Map<String,Object>> example() {
+    private List<Map<String,Object>> example() {
         List<Map<String, Object>> list = new ArrayList<>();
         Map<String, Object> nmap = new HashMap<String, Object>();
-        nmap.put("fire", 472);
-        nmap.put("idk", 4);
+        nmap.put("chair", '3');
+        nmap.put("fire", 472.6);
+        nmap.put("idk", "I need EDM when coding");
         list.add(nmap);
         Map<String, Object> amap = new HashMap<String, Object>();
-        amap.put("chair", 7356);
-        amap.put("fire", 222222);
+        amap.put("chair", "yhkggi");
+        amap.put("kills", 55);
         amap.put("idk", 333333);
         list.add(amap);
         Map<String, Object> znmap = new HashMap<String, Object>();
         znmap.put("chair", 17246);
         znmap.put("fire", 999999999);
+        znmap.put("idk", 611534);
+        znmap.put("kills", 5);
         list.add(znmap);
+        Map<String, Object> emmap = new HashMap<String, Object>();
+        list.add(emmap);
         return list;
     }
 
-    public void insert(List<Map<String,Object>> list) {
+    private void insert(List<Map<String,Object>> list) {
         for (Map<String,Object> mp : list) {
             String columns = "";
             String values = "";
@@ -111,8 +116,8 @@ public class JDBCListMap {
                 String c = mp.get("chair").toString();
                 if (columns.equals("")) columns = "(chair";
                 else columns = columns + ", chair";
-                if (values.equals("")) values = "(" + c;
-                else values = values + "," + c;
+                if (values.equals("")) values = "('" + c + "'";
+                else values = values + ",'" + c + "'";
             }
             if (mp.containsKey("fire")) {
                 String f = mp.get("fire").toString();
@@ -125,8 +130,8 @@ public class JDBCListMap {
                 String i = mp.get("idk").toString();
                 if (columns.equals("")) columns = "(idk";
                 else columns = columns + ", idk";
-                if (values.equals("")) values = "(" + i;
-                else values = values + "," + i;
+                if (values.equals("")) values = "('" + i + "'";
+                else values = values + ",'" + i + "'";
             }
             if (!columns.equals("")) {
                 columns = columns + ")";
