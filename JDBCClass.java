@@ -126,14 +126,6 @@ public class JDBCClass {
     }
 
     private void commit(String command) {
-        String confirm = "";
-        Scanner sc = new Scanner(System.in);
-        while (!confirm.equalsIgnoreCase("Y") && !confirm.equalsIgnoreCase("N")) {
-            System.out.println(command);
-            System.out.println("FINAL CHECK, TYPE Y TO PROCEED, N TO DISCARD");
-            confirm = sc.nextLine();
-        }
-        if (confirm.equalsIgnoreCase("N")) return;
 
         Connection conn = null;
         try {
@@ -144,7 +136,6 @@ public class JDBCClass {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         try {
             PreparedStatement ps = conn.prepareStatement(command);
             ps.execute();
@@ -152,6 +143,7 @@ public class JDBCClass {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(command);
     }
 
     public static void main(String[] args) {
@@ -163,5 +155,6 @@ public class JDBCClass {
         tq.insertNew(temp2);
         tq.insertNew(temp1);
         tq.deleteNew(temp2);
+        tq.deleteNew(temp1);
     }
 }
