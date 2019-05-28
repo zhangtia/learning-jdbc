@@ -20,12 +20,11 @@ DBEditor.java
 
 JDBCListMap.java
 - Connect to database and modifies database from data structure input
-- ~First commit only finished insert function..~ Implemented insert and delete function
+- Implemented insert and delete function
 - Insert fucntion takes in a List of Map<String,Object> data structure and the corresponding values will be inserted
 - Insert function can be modified based on the names of columns in the table
 - Example() function returns a List<Map<String,Object>> object to test insert function
-- Recycled the commit() function from DBEditor.java so executing SQL requires manual confirmation each time..
-  - will change to executeBatch() without manual confirmation for faster execution of large SQL commands 
+
 
 JDBCClass.Java - (SQLClass.Java)
 - Connect to database and modifies database from a class object (SQLClass)
