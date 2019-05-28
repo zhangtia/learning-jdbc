@@ -50,14 +50,6 @@ public class JDBCListMap {
     }
 
     private void commit(String command) {
-        String confirm = "";
-        Scanner sc = new Scanner(System.in);
-        while (!confirm.equalsIgnoreCase("Y") && !confirm.equalsIgnoreCase("N")) {
-            System.out.println(command);
-            System.out.println("FINAL CHECK, TYPE Y TO PROCEED, N TO DISCARD");
-            confirm = sc.nextLine();
-        }
-        if (confirm.equalsIgnoreCase("N")) return;
 
         Connection conn = null;
         try {
@@ -68,7 +60,6 @@ public class JDBCListMap {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         try {
             PreparedStatement ps = conn.prepareStatement(command);
             ps.execute();
@@ -76,6 +67,7 @@ public class JDBCListMap {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(command);
     }
 
     private List<Map<String,Object>> example() {
