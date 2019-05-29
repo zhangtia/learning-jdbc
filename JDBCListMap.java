@@ -3,13 +3,15 @@ import java.sql.*;
 
 public class JDBCListMap {
 
-    // ======== Pre-fill in for testing ========= 
+    // ======== Pre-fill in for testing =========
     static String driver = "";
     static String url = "";
     static String user = "";
     static String password = "";
     // ======== Pre-fill in for testing =========
-
+    
+    private static int batchsize = 10;
+    
     private void getconnection() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Input Driver: ");
@@ -68,14 +70,17 @@ public class JDBCListMap {
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             conn.setAutoCommit(false);
+            int counter = 0;
             for (List<String> entry : command) {
+                ++counter;
                 for (int i = 1; i <= entry.size(); ++i) {
                     ps.setString(i,entry.get(i-1));
                 }
                 System.out.println(ps);
                 ps.addBatch();
+                if (counter%batchsize == 0) ps.executeBatch();
             }
-            int[] count = ps.executeBatch();
+            ps.executeBatch();
             conn.commit();
             conn.setAutoCommit(true);
             conn.close();
@@ -150,8 +155,8 @@ public class JDBCListMap {
 
     public static void main(String[] args) {
         JDBCListMap tq = new JDBCListMap();
-        tq.getconnection(); // comment out during testing
-        while (!tq.testcnct()) tq.getconnection(); // comment out during testing
+        tq.getconnection();
+        while (!tq.testcnct()) tq.getconnection();
         tq.insert(tq.example());
         tq.delete(tq.example());
     }
