@@ -1,3 +1,4 @@
+
 import java.util.*;
 import java.sql.*;
 
@@ -11,7 +12,7 @@ public class JDBCListMap {
     // ======== Pre-fill in for testing =========
     
     private static int batchsize = 10;
-    
+
     private void getconnection() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Input Driver: ");
@@ -53,7 +54,7 @@ public class JDBCListMap {
         return true;
     }
 
-    private void commit(List<List<String>> command, String sql) {
+    private void commit(List<String> command) {
 
         Connection conn = null;
         try {
@@ -64,30 +65,21 @@ public class JDBCListMap {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //String sql = "INSERT INTO new (chair,fire,idk) VALUES (?, ?, ?);";
-
-
         try {
-            PreparedStatement ps = conn.prepareStatement(sql);
+            Statement st = conn.createStatement();
             conn.setAutoCommit(false);
             int counter = 0;
-            for (List<String> entry : command) {
-                ++counter;
-                for (int i = 1; i <= entry.size(); ++i) {
-                    ps.setString(i,entry.get(i-1));
-                }
-                System.out.println(ps);
-                ps.addBatch();
-                if (counter%batchsize == 0) ps.executeBatch();
+            for (String cmd : command) {
+                st.execute(cmd);
+                if (counter%batchsize == 0) conn.commit();
             }
-            ps.executeBatch();
             conn.commit();
             conn.setAutoCommit(true);
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        //System.out.println(command);
     }
 
     private List<Map<String,Object>> example() {
@@ -99,7 +91,7 @@ public class JDBCListMap {
         list.add(nmap);
         Map<String, Object> amap = new HashMap<String, Object>();
         amap.put("chair", "yhkggi");
-        amap.put("fire", 55);
+        //amap.put("kills", 55);
         amap.put("idk", 333333);
         list.add(amap);
         Map<String, Object> znmap = new HashMap<String, Object>();
@@ -109,48 +101,83 @@ public class JDBCListMap {
         //znmap.put("kills", 5);
         list.add(znmap);
         Map<String, Object> emmap = new HashMap<String, Object>();
-        emmap.put("fire", 6);
         list.add(emmap);
         return list;
     }
 
     private void insert(List<Map<String,Object>> list) {
-        List<List<String>> command = new ArrayList<>();
+        List<String> data = new ArrayList<>();
         for (Map<String,Object> mp : list) {
-            List<String> entry = new ArrayList<>();
-            //String a = "null";
-            String b = "null";
-            String c = "null";
-            String d = "null";
-            //if (mp.containsKey("kills")) {a = mp.get("kills").toString();}
-            if (mp.containsKey("chair")) {b = mp.get("chair").toString();}
-            if (mp.containsKey("fire")) {c = mp.get("fire").toString();}
-            if (mp.containsKey("idk")) {d = mp.get("idk").toString();}
-            //entry.add(a);
-            entry.add(b);
-            entry.add(c);
-            entry.add(d);
-            command.add(entry);
+            String columns = "";
+            String values = "";
+            if (mp.containsKey("kills")) {
+                String k = mp.get("kills").toString();
+                if (columns.equals("")) columns = "(kills";
+                else columns = columns + ", kills";
+                if (values.equals("")) values = "(" + k;
+                else values = values + "," + k;
+            }
+            if (mp.containsKey("chair")) {
+                String c = mp.get("chair").toString();
+                if (columns.equals("")) columns = "(chair";
+                else columns = columns + ", chair";
+                if (values.equals("")) values = "('" + c + "'";
+                else values = values + ",'" + c + "'";
+            }
+            if (mp.containsKey("fire")) {
+                String f = mp.get("fire").toString();
+                if (columns.equals("")) columns = "(fire";
+                else columns = columns + ", fire";
+                if (values.equals("")) values = "(" + f;
+                else values = values + "," + f;
+            }
+            if (mp.containsKey("idk")) {
+                String i = mp.get("idk").toString();
+                if (columns.equals("")) columns = "(idk";
+                else columns = columns + ", idk";
+                if (values.equals("")) values = "('" + i + "'";
+                else values = values + ",'" + i + "'";
+            }
+            if (!columns.equals("")) {
+                columns = columns + ")";
+                values = values + ")";
+                String command = "INSERT INTO new" + columns + " VALUES " + values;
+                data.add(command);
+            }
         }
-        commit(command, "INSERT INTO new (chair,fire,idk) VALUES (?, ?, ?);");
+        commit(data);
     }
 
     private void delete(List<Map<String,Object>> list) {
-        List<List<String>> command = new ArrayList<>();
+        List<String> data = new ArrayList<>();
         for (Map<String,Object> mp : list) {
-            List<String> entry = new ArrayList<>();
-            String b = "null";
-            String c = "null";
-            String d = "null";
-            if (mp.containsKey("chair")) {b = mp.get("chair").toString();}
-            if (mp.containsKey("fire")) {c = mp.get("fire").toString();}
-            if (mp.containsKey("idk")) {d = mp.get("idk").toString();}
-            entry.add(b);
-            entry.add(c);
-            entry.add(d);
-            command.add(entry);
+            String values = "";
+            if (mp.containsKey("kills")) {
+                String k = mp.get("kills").toString();
+                if (values.equals("")) values = "kills = " + k;
+                else values = values + " AND kills = " + k;
+            }
+            if (mp.containsKey("chair")) {
+                String c = mp.get("chair").toString();
+                if (values.equals("")) values = "chair = '" + c + "'";
+                else values = values + " AND chair = '" + c + "'";
+            }
+            if (mp.containsKey("fire")) {
+                String f = mp.get("fire").toString();
+                if (values.equals("")) values = "fire = " + f;
+                else values = values + " AND fire = " + f;
+            }
+            if (mp.containsKey("idk")) {
+                String i = mp.get("idk").toString();
+                if (values.equals("")) values = "idk = '" + i + "'";
+                else values = values + " AND idk = '" + i + "'";
+            }
+            if (!values.equals("")) {
+                String command = "DELETE FROM new WHERE " + values;
+                data.add(command);
+            }
         }
-        commit(command, "DELETE FROM new WHERE chair = ? AND FIRE = ? AND IDK = ?;");
+        commit(data);
     }
 
     public static void main(String[] args) {
