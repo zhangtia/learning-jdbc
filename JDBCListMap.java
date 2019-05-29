@@ -71,6 +71,7 @@ public class JDBCListMap {
             int counter = 0;
             for (String cmd : command) {
                 st.execute(cmd);
+                ++counter;
                 if (counter%batchsize == 0) conn.commit();
             }
             conn.commit();
