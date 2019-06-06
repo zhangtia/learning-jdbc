@@ -3,7 +3,7 @@ Wrote this code when learning about Java Database Connectivity during summer int
 
 Code written and compiled on Intellij IDEA using Java
 
-For the Java files, I worked on a database that contained two tables
+For the Java files, I worked on a database that contained a table as followed
 
 Table 1: New
 - kills (int) [Auto-incrementing Index]
